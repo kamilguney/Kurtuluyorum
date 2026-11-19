@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Kurtuluyorum",
+    "slug": "nefes",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./assets/icon.png",
+    "android": {
+      "package": "tr.revita.nefes",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAF8F2"
+      }
+    },
+    "ios": { "bundleIdentifier": "tr.revita.nefes" },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

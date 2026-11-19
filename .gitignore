@@ -1,0 +1,13 @@
+.gradle/
+.idea/
+.toolchain/
+**/build/
+local.properties
+*.iml
+*.jks
+*.keystore
+
+.expo/
+node_modules/
+dist/
+expo/ui.generated.js

@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16382b">
+<title>Kurtuluyorum — Sigarasız Yaşam Takibi</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <main id="main">
+    <!-- BUGÜN -->
+    <section id="view-bugun" class="view active" aria-label="Bugün">
+      <div class="hero">
+        <svg class="scene" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f7c89c"/>
+              <stop offset="55%" stop-color="#f09270"/>
+              <stop offset="100%" stop-color="#d76d58"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="220" fill="url(#sky)"/>
+          <circle cx="295" cy="82" r="34" fill="#ffe6b8" opacity=".92"/>
+          <circle cx="295" cy="82" r="48" fill="#ffe6b8" opacity=".25"/>
+          <path d="M0 148 Q75 112 155 138 T310 124 T400 142 L400 220 L0 220 Z" fill="#3a6b56" opacity=".55"/>
+          <path d="M0 165 Q90 135 190 160 T400 150 L400 220 L0 220 Z" fill="#234f3d" opacity=".82"/>
+          <path d="M0 185 Q110 164 230 184 T400 176 L400 220 L0 220 Z" fill="#16382b"/>
+          <path d="M46 184 l6-18 6 18zm16 2 l5-14 5 14zm265-6 l7-20 7 20zm18 3 l5-13 5 13z" fill="#112b21"/>
+        </svg>
+        <div class="hero-top">
+          <span class="brand">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            Kurtuluyorum
+          </span>
+          <span class="date-pill" id="today-date"></span>
+        </div>
+        <div class="hero-body" id="hero-body"></div>
+      </div>
+
+      <!-- Fresh setup CTA (only shown before setup) -->
+      <div class="card" id="fresh-card">
+        <div class="card-head">
+          <h2 class="card-title">Sigaradan Kurtulma Sürecini Takibe Al</h2>
+        </div>
+        <p class="muted" style="margin-bottom:12px">Sigaradan kurtulduğun tarih ve saati, önceki günlük tüketim ve paket bilgilerini gir; sigarasız geçen süren, içilmeyen dal ve tasarrufun hemen hesaplansın.</p>
+        <button class="btn btn-coral btn-full" id="btn-start-setup" type="button">Sigaradan Kurtulma Bilgilerini Gir</button>
+      </div>
+
+      <!-- Personal stats (only shown after setup) -->
+      <div id="stats-wrap" hidden>
+        <div class="card">
+          <div class="card-head">
+            <h2 class="card-title">Sigaradan Kurtulma Özeti</h2>
+            <button class="btn btn-soft btn-sm" id="btn-go-sigara" type="button">Detay</button>
+          </div>
+          <div class="stats-grid" aria-live="polite">
+            <div class="stat">
+              <div class="stat-ico coral-bg" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="stat-val" id="val-cash">₺0</div>
+              <div class="stat-lbl">Biriken Tutar</div>
+            </div>
+            <div class="stat">
+              <div class="stat-ico pine-bg" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </div>
+              <div class="stat-val" id="val-cigs">0</div>
+              <div class="stat-lbl">İçilmeyen Dal</div>
+            </div>
+            <div class="stat">
+              <div class="stat-ico teal-bg" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </div>
+              <div class="stat-val" id="val-time">0 dk</div>
+              <div class="stat-lbl">Kazanılan Süre</div>
+            </div>
+          </div>
+          <div class="summary-next" id="dash-next-ms">
+            <div class="summary-next-row">
+              <span class="muted" id="dash-next-lbl">Sıradaki eşik</span>
+              <strong id="dash-next-pct">%0</strong>
+            </div>
+            <div class="ms-prog"><div id="dash-next-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Water Quick Action -->
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c7c82" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            Bugünkü Su Takibi
+          </h2>
+          <button class="btn btn-soft btn-sm" id="btn-go-water" type="button">Detay</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <strong id="dash-water-txt" style="font-size:18px;font-family:var(--serif);color:var(--teal)">0 / 8 bardak</strong>
+          <span class="muted" id="dash-water-pct">%0</span>
+        </div>
+        <div class="water-bar-wrap"><div class="water-bar" id="dash-water-bar" style="width:0%"></div></div>
+        <div class="water-actions">
+          <button class="btn btn-teal btn-sm" id="btn-dash-add-water" type="button" style="flex:1">+1 Bardak Ekle</button>
+          <button class="btn btn-soft btn-sm" id="btn-dash-undo-water" type="button">Geri Al</button>
+        </div>
+      </div>
+
+      <!-- Daily Quote -->
+      <div class="card quote-card">
+        <p class="quote-text" id="quote-text"></p>
+        <div class="quote-meta">
+          <span>Günün Notu</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SİGARA -->
+    <section id="view-sigara" class="view" aria-label="Sigara Takibi">
+      <div class="card" id="sigara-empty">
+        <h1 style="font-size:22px">Sigaradan Kurtulma Takibi</h1>
+        <p class="muted" style="margin:6px 0 14px">Sigaradan kurtulduğun tarih ve saati, günlük içtiğin dal sayısını ve paket fiyatını girdiğinde detaylı sayaç, tasarruf projeksiyonları ve süreç analizin burada açılır.</p>
+        <button class="btn btn-coral btn-full" id="btn-sigara-setup" type="button">Sigaradan Kurtulma Bilgilerini Gir</button>
+      </div>
+
+      <div id="sigara-content" hidden>
+        <div class="card">
+          <div class="card-head">
+            <h1 style="font-size:22px">Sigaradan Kurtulma Takibi</h1>
+            <button class="btn btn-soft btn-sm" id="btn-sigara-edit" type="button">Düzenle</button>
+          </div>
+          <div class="quit-meta" id="sig-quit-date"></div>
+          <div class="timer-grid timer-grid-4" aria-live="polite">
+            <div class="t-box"><div class="t-num" id="sig-yr">0</div><div class="t-lbl">Yıl</div></div>
+            <div class="t-box"><div class="t-num" id="sig-mo">0</div><div class="t-lbl">Ay</div></div>
+            <div class="t-box"><div class="t-num" id="sig-wk">0</div><div class="t-lbl">Hafta</div></div>
+            <div class="t-box"><div class="t-num" id="sig-dy">0</div><div class="t-lbl">Gün</div></div>
+          </div>
+          <div class="timer-grid timer-grid-3" style="margin-top:8px">
+            <div class="t-box"><div class="t-num" id="sig-hr">00</div><div class="t-lbl">Saat</div></div>
+            <div class="t-box"><div class="t-num" id="sig-mn">00</div><div class="t-lbl">Dakika</div></div>
+            <div class="t-box"><div class="t-num" id="sig-sc">00</div><div class="t-lbl">Saniye</div></div>
+          </div>
+          <p class="muted" style="margin-top:10px">Toplam kesintisiz süre: <strong id="sig-total-days" style="color:var(--pine)">0,0 gün</strong></p>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="card-head">
+            <h2 class="card-title">Sağlık Durumum</h2>
+            <span class="date-pill" id="sig-health-count" style="background:var(--pine-soft);color:var(--pine)">0 / 19 aşama</span>
+          </div>
+          <div class="lungs-panel">
+            <div class="lungs-visual" aria-hidden="true">
+              <svg class="lungs-svg" viewBox="0 0 160 144">
+                <defs>
+                  <clipPath id="lungs-clip">
+                    <path d="M 54 25 C 66 25, 71 42, 71 66 C 71 84, 66 96, 65 114 C 65 122, 60 124, 52 121 C 41 117, 30 123, 21 127 C 14 130, 11 122, 12 109 C 13 84, 17 58, 29 40 C 37 29, 45 25, 54 25 Z"/>
+                    <path d="M 106 25 C 94 25, 89 42, 89 66 C 89 84, 94 96, 95 114 C 95 122, 100 124, 108 121 C 119 117, 130 123, 139 127 C 146 130, 149 122, 148 109 C 147 84, 143 58, 131 40 C 123 29, 115 25, 106 25 Z"/>
+                  </clipPath>
+                  <linearGradient id="lungFillGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#7cd48c"/>
+                    <stop offset="100%" stop-color="#359b62"/>
+                  </linearGradient>
+                </defs>
+                <!-- Clipped lung interiors & bottom-up green fill -->
+                <g clip-path="url(#lungs-clip)">
+                  <rect x="8" y="22" width="144" height="110" fill="#f7f3eb"/>
+                  <rect id="sig-lungs-fill" class="lungs-fill-rect" x="8" y="129" width="144" height="0" fill="url(#lungFillGrad)"/>
+                  <line id="sig-lungs-line" class="lungs-fill-line" x1="8" y1="129" x2="152" y2="129" stroke="#257a4a" stroke-width="1.6" opacity="0"/>
+                </g>
+                <!-- Lung lobe outlines -->
+                <path d="M 54 25 C 66 25, 71 42, 71 66 C 71 84, 66 96, 65 114 C 65 122, 60 124, 52 121 C 41 117, 30 123, 21 127 C 14 130, 11 122, 12 109 C 13 84, 17 58, 29 40 C 37 29, 45 25, 54 25 Z" fill="none" stroke="#16382b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M 106 25 C 94 25, 89 42, 89 66 C 89 84, 94 96, 95 114 C 95 122, 100 124, 108 121 C 119 117, 130 123, 139 127 C 146 130, 149 122, 148 109 C 147 84, 143 58, 131 40 C 123 29, 115 25, 106 25 Z" fill="none" stroke="#16382b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Trachea & Bronchial Tree -->
+                <g fill="none" stroke="#214f3d" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M 76 10 Q 80 8 84 10" stroke-width="2.4"/>
+                  <path d="M 76 10 L 76 43 C 76 50, 71 54, 58 61" stroke-width="2.6"/>
+                  <path d="M 84 10 L 84 43 C 84 50, 89 54, 102 61" stroke-width="2.6"/>
+                  <path d="M 74 49 Q 80 46 86 49" stroke-width="2"/>
+                  <path d="M 76 18 H 84 M 76 26 H 84 M 76 34 H 84" stroke-width="1.6" opacity="0.65"/>
+                  <!-- Left bronchioles -->
+                  <path d="M 58 61 Q 48 52 44 41" stroke-width="2"/>
+                  <path d="M 49 52 Q 40 50 34 55" stroke-width="1.6"/>
+                  <path d="M 58 61 Q 44 68 30 75" stroke-width="2"/>
+                  <path d="M 44 68 Q 36 62 28 63" stroke-width="1.5"/>
+                  <path d="M 38 71 Q 31 79 25 88" stroke-width="1.5"/>
+                  <path d="M 56 63 Q 51 82 47 100" stroke-width="2"/>
+                  <path d="M 51 80 Q 42 88 35 103" stroke-width="1.5"/>
+                  <path d="M 50 86 Q 57 95 57 108" stroke-width="1.5"/>
+                  <!-- Right bronchioles -->
+                  <path d="M 102 61 Q 112 52 116 41" stroke-width="2"/>
+                  <path d="M 111 52 Q 120 50 126 55" stroke-width="1.6"/>
+                  <path d="M 102 61 Q 116 68 130 75" stroke-width="2"/>
+                  <path d="M 116 68 Q 124 62 132 63" stroke-width="1.5"/>
+                  <path d="M 122 71 Q 129 79 135 88" stroke-width="1.5"/>
+                  <path d="M 104 63 Q 109 82 113 100" stroke-width="2"/>
+                  <path d="M 109 80 Q 118 88 125 103" stroke-width="1.5"/>
+                  <path d="M 110 86 Q 103 95 103 108" stroke-width="1.5"/>
+                </g>
+              </svg>
+            </div>
+            <div class="lungs-info">
+              <div class="lungs-pct" id="sig-lungs-pct">%0</div>
+              <div class="lungs-title">Genel Sağlık &amp; Akciğer İyileşmesi</div>
+              <p class="muted" id="sig-lungs-status">İlk toparlanma aşaması takip ediliyor.</p>
+            </div>
+          </div>
+          <div class="health-mini-list" id="sig-health-preview"></div>
+          <button class="btn btn-soft btn-sm btn-full" id="btn-sigara-health" type="button" aria-expanded="false" aria-controls="sig-health-collapse" style="margin-top:10px">Tüm Sağlık Aşamalarını Gör (19) ▾</button>
+          <div class="collapse-body" id="sig-health-collapse" hidden>
+            <div class="health-mini-list" id="sig-health-all" style="margin-top:0"></div>
+            <div class="health-extra">
+              <div class="sub-head" style="margin-bottom:6px">Ek Bilimsel Sağlık Bulguları</div>
+              <ul>
+                <li><strong>Yaşam süresi:</strong> Hangi yaşta kurtulunursa kurtulunsun yaşam kalitesi artar; yaşam beklentisine 10 yıla kadar katkı sağlayabilir.</li>
+                <li><strong>Kalp ve damar:</strong> Enflamasyon belirteçleri düşer, kolesterol profili iyileşir; daha önce kalp krizi geçirenlerde ikinci kriz riski yaklaşık %50 azalır.</li>
+                <li><strong>Kronik akciğer:</strong> KOAH (COPD) gelişme veya ağırlaşma riski belirgin biçimde düşer.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="muted" style="margin-top:10px;font-size:11.5px">Kaynaklar: CDC · WHO · NHS · American Cancer Society · AHA (20 dk – 20 yıl)</p>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="card-head">
+            <h2 class="card-title">Tüketim ve Tasarruf</h2>
+          </div>
+          <div class="detail-grid">
+            <div class="d-box">
+              <div class="d-lbl">İçilmeyen Sigara</div>
+              <div class="d-val" id="sig-cigs">0 dal</div>
+              <div class="d-sub" id="sig-packs">0,0 paket</div>
+            </div>
+            <div class="d-box">
+              <div class="d-lbl">Cepte Kalan Para</div>
+              <div class="d-val" id="sig-cash">₺0,00</div>
+              <div class="d-sub" id="sig-daily-cash">Günde ₺0,00</div>
+            </div>
+            <div class="d-box">
+              <div class="d-lbl">Kazanılan Zaman</div>
+              <div class="d-val" id="sig-time">0 dk</div>
+              <div class="d-sub" id="sig-daily-time">Günde 0 dk</div>
+            </div>
+            <div class="d-box">
+              <div class="d-lbl">Önceki Alışkanlık</div>
+              <div class="d-val" id="sig-daily-cigs">0 dal / gün</div>
+              <div class="d-sub" id="sig-pack-info">20 dal · ₺85,00</div>
+            </div>
+          </div>
+          <hr class="sep">
+          <div class="sub-head">Tahmini Tasarruf Projeksiyonu</div>
+          <div class="proj-grid">
+            <div class="proj-box"><div class="proj-val" id="sig-proj-month">₺0</div><div class="proj-lbl">30 Günlük</div></div>
+            <div class="proj-box"><div class="proj-val" id="sig-proj-6m">₺0</div><div class="proj-lbl">6 Aylık</div></div>
+            <div class="proj-box"><div class="proj-val" id="sig-proj-year">₺0</div><div class="proj-lbl">1 Yıllık</div></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="card-head">
+            <h2 class="card-title">Süreç İlerlemesi</h2>
+            <button class="btn btn-soft btn-sm" id="btn-sigara-steps" type="button" aria-expanded="false" aria-controls="sig-steps-collapse">Tüm Adımlar ▾</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <strong id="sig-ms-count" style="color:var(--pine)">0 / 10 eşik</strong>
+            <span class="muted" id="sig-ms-pct">%0</span>
+          </div>
+          <div class="ms-prog" style="margin-bottom:10px"><div id="sig-ms-bar" style="width:0%"></div></div>
+          <div class="notice" id="sig-next-ms-box"></div>
+          <div class="collapse-body" id="sig-steps-collapse" hidden>
+            <div class="ms-list" id="sig-ms-list"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="card-head">
+            <h2 class="card-title">Süreç Yönetimi</h2>
+          </div>
+          <p class="muted" style="margin-bottom:12px">Tekrar sigara içtiysen alışkanlık ayarlarını ve su kayıtlarını silmeden yalnızca sayacı şu ana sıfırlayabilirsin.</p>
+          <button class="btn btn-soft btn-full" id="btn-sigara-relapse" type="button" style="color:var(--danger)">Sigara İçtim, Sayacı Başa Sar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- YOLCULUK -->
+    <section id="view-yolculuk" class="view" aria-label="Yolculuk">
+      <div class="card">
+        <h1 style="font-size:22px">Sigarasız Süreç Adımları</h1>
+      </div>
+      <details class="card health-details">
+        <summary>Sigaradan kurtulduktan sonra vücutta neler değişir?</summary>
+        <ul>
+          <li><strong>20 dk – 72 saat:</strong> Nabız ve kan basıncı düşmeye başlar, karbonmonoksit normale döner, nikotin vücuttan atılır ve bronşlar gevşer.</li>
+          <li><strong>1 hafta – 9 ay:</strong> Akciğer temizleyici yapıları (silya), dolaşım ve akciğer kapasitesi toparlanır; öksürük ve nefes darlığı azalır.</li>
+          <li><strong>1 – 20 yıl:</strong> Koroner kalp riski 1 yılda yarıya, 15 yılda normale iner; 5–20 yılda inme ve birçok kanser riski belirgin biçimde düşer.</li>
+        </ul>
+        <p class="muted health-source">Kaynaklar: CDC, WHO, NHS, American Cancer Society (ACS)<br><span>https://www.cdc.gov/tobacco/about/benefits-of-quitting.html</span></p>
+      </details>
+      <div id="journey-empty" class="card" hidden>
+        <p class="muted" style="margin-bottom:10px">Sigarasız süreç adımlarını takip etmek için önce sigaradan kurtulma bilgilerini gir.</p>
+        <button class="btn btn-coral btn-full" id="btn-journey-setup" type="button">Sigaradan Kurtulma Bilgilerini Gir</button>
+      </div>
+      <div class="ms-list" id="ms-list"></div>
+    </section>
+
+    <!-- SU -->
+    <section id="view-su" class="view" aria-label="Su">
+      <div class="card">
+        <div class="card-head">
+          <h1 style="font-size:22px">Su Günlüğü</h1>
+          <span class="date-pill" id="water-date-lbl" style="background:var(--teal-soft);color:var(--teal)"></span>
+        </div>
+        <p class="muted">İstek anlarında bir bardak su içmek, eli ve dikkati tazeleyen basit bir duraklama alışkanlığıdır.</p>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:12px">
+          <strong id="water-main-txt" style="font-size:24px;font-family:var(--serif);color:var(--teal)">0 / 8 bardak</strong>
+          <span class="muted" id="water-main-pct">%0</span>
+        </div>
+        <div class="water-bar-wrap"><div class="water-bar" id="water-main-bar" style="width:0%"></div></div>
+        <div class="water-actions">
+          <button class="btn btn-teal" id="btn-add-water" type="button" style="flex:1">+1 Bardak</button>
+          <button class="btn btn-soft" id="btn-undo-water" type="button">Geri Al</button>
+        </div>
+        <div class="cups-grid" id="cups-grid" aria-label="Bardak göstergesi"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">Günlük Hedef &amp; Hatırlatıcı</h2>
+        </div>
+        <div class="field">
+          <label for="inp-cup-goal">Günlük bardak hedefi (1–20)</label>
+          <div style="display:flex;gap:8px">
+            <input id="inp-cup-goal" type="number" min="1" max="20" step="1" inputmode="numeric">
+            <button class="btn btn-primary btn-sm" id="btn-save-goal" type="button">Kaydet</button>
+          </div>
+        </div>
+        <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+        <div class="switch-row">
+          <div>
+            <strong style="font-size:14px">Su Hatırlatıcısı (09:00–21:00)</strong>
+            <div class="muted" id="rem-sub">Durum kontrol ediliyor…</div>
+          </div>
+          <label class="switch" aria-label="Su hatırlatıcısını aç veya kapat">
+            <input type="checkbox" id="chk-rem">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="field" style="margin-top:10px;margin-bottom:8px">
+          <label for="sel-rem-int">Hatırlatma sıklığı</label>
+          <select id="sel-rem-int">
+            <option value="60">Her 60 dakikada bir</option>
+            <option value="90">Her 90 dakikada bir</option>
+            <option value="120">Her 2 saatte bir</option>
+            <option value="180">Her 3 saatte bir</option>
+          </select>
+        </div>
+        <div class="notice" id="rem-notice"></div>
+      </div>
+    </section>
+
+    <!-- AYARLAR -->
+    <section id="view-ayarlar" class="view" aria-label="Ayarlar">
+      <div class="card">
+        <h1 style="font-size:22px">Sigaradan Kurtulma Bilgileri</h1>
+        <p class="muted" style="margin-top:4px;margin-bottom:14px">Tüm veriler yalnızca cihazında saklanır. Ondalık değerlerde virgül (ör. 85,50) kullanabilirsin.</p>
+        <form id="settings-form" novalidate>
+          <div class="field">
+            <label for="s-quit">Kurtulma tarih ve saati</label>
+            <button type="button" id="s-quit" class="dt-input" aria-haspopup="dialog" aria-controls="dlg-dt-picker">
+              <span class="dt-input-text"></span>
+              <svg class="dt-input-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </button>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="s-cigs">Günde sigara (dal)</label>
+              <input id="s-cigs" type="text" inputmode="decimal" required>
+            </div>
+            <div class="field">
+              <label for="s-pack">Paketteki dal</label>
+              <input id="s-pack" type="text" inputmode="numeric" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="s-price">Paket fiyatı (₺)</label>
+              <input id="s-price" type="text" inputmode="decimal" required>
+            </div>
+            <div class="field">
+              <label for="s-min">Dal başına dakika</label>
+              <input id="s-min" type="text" inputmode="decimal" required>
+            </div>
+          </div>
+          <div class="err" id="s-err" role="alert"></div>
+          <button class="btn btn-primary btn-full" type="submit">Bilgileri Kaydet</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title" style="margin-bottom:6px">Veri Yönetimi</h2>
+        <p class="muted" style="margin-bottom:12px">İstersen yalnızca sigara sayacını şu ana sıfırlayabilir ya da tüm verileri silebilirsin.</p>
+        <button class="btn btn-soft btn-full" id="btn-settings-relapse" type="button" style="color:var(--pine);margin-bottom:8px" hidden>Sigara İçtim, Sayacı Başa Sar</button>
+        <button class="btn btn-soft btn-full" id="btn-ask-reset" type="button" style="color:var(--danger)">Tüm Verileri Sıfırla</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bnav" aria-label="Ana menü">
+    <button class="nav-btn" data-tab="bugun" aria-current="page" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+      Bugün
+    </button>
+    <button class="nav-btn" data-tab="sigara" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12H2v4h14"/><path d="M22 12v4"/><path d="M18 12h-.5"/><path d="M7 12v4"/><path d="M18 8c0-2.5-2-2.5-2-5"/><path d="M22 8c0-2.5-2-2.5-2-5"/><path d="m2 2 20 20"/></svg>
+      Sigara
+    </button>
+    <button class="nav-btn" data-tab="yolculuk" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+      Yolculuk
+    </button>
+    <button class="nav-btn" data-tab="su" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+      Su
+    </button>
+    <button class="nav-btn" data-tab="ayarlar" type="button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.51 1.09H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Ayarlar
+    </button>
+  </nav>
+</div>
+
+<!-- Setup / Edit Dialog -->
+<dialog id="dlg-setup" aria-labelledby="dlg-title">
+  <div class="dlg-inner">
+    <div class="dlg-head">
+      <h2 id="dlg-title" style="font-size:20px">Sigaradan Kurtulma Bilgileri</h2>
+      <button type="button" id="dlg-close" aria-label="Kapat" style="padding:4px 8px;font-weight:700">✕</button>
+    </div>
+    <p class="muted" style="margin-bottom:12px">Sigaradan kurtulduğun tarih ve saati, önceki günlük alışkanlık bilgilerinle birlikte kaydet.</p>
+    <form id="dlg-form" novalidate>
+      <div class="field">
+        <label for="d-quit">Kurtulma tarih ve saati</label>
+        <button type="button" id="d-quit" class="dt-input" aria-haspopup="dialog" aria-controls="dlg-dt-picker">
+          <span class="dt-input-text"></span>
+          <svg class="dt-input-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </button>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="d-cigs">Günde sigara (dal)</label>
+          <input id="d-cigs" type="text" inputmode="decimal" required>
+        </div>
+        <div class="field">
+          <label for="d-pack">Paketteki dal</label>
+          <input id="d-pack" type="text" inputmode="numeric" required>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="d-price">Paket fiyatı (₺)</label>
+          <input id="d-price" type="text" inputmode="decimal" required>
+        </div>
+        <div class="field">
+          <label for="d-min">Dal başına dakika</label>
+          <input id="d-min" type="text" inputmode="decimal" required>
+        </div>
+      </div>
+      <div class="err" id="d-err" role="alert"></div>
+      <div class="dlg-actions">
+        <button class="btn btn-soft" type="button" id="dlg-cancel">Vazgeç</button>
+        <button class="btn btn-primary" type="submit" id="dlg-submit">Kaydet ve Takibe Başla</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Reset Confirm Dialog -->
+<dialog id="dlg-reset" aria-labelledby="rst-title">
+  <div class="dlg-inner">
+    <div class="dlg-head">
+      <h2 id="rst-title" style="font-size:19px">Veriler Sıfırlansın mı?</h2>
+    </div>
+    <p class="muted" style="margin-bottom:14px">Profil bilgilerin ve su kayıtların silinecek. Uygulama başlangıç durumuna dönecek.</p>
+    <div class="dlg-actions">
+      <button class="btn btn-soft" type="button" id="rst-cancel">Vazgeç</button>
+      <button class="btn btn-coral" type="button" id="rst-confirm">Evet, Sıfırla</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Relapse Reset Dialog -->
+<dialog id="dlg-relapse" aria-labelledby="rel-title">
+  <div class="dlg-inner">
+    <div class="dlg-head">
+      <h2 id="rel-title" style="font-size:19px">Sayaç Başa Sarılsın mı?</h2>
+    </div>
+    <p class="muted" style="margin-bottom:14px">Kurtulma tarih ve saatin şu an olarak güncellenecek. Günlük sigara, paket fiyatı ve su kayıtların korunur.</p>
+    <div class="dlg-actions">
+      <button class="btn btn-soft" type="button" id="rel-cancel">Vazgeç</button>
+      <button class="btn btn-coral" type="button" id="rel-confirm">Evet, Sayacı Başa Sar</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Turkish 24h Wheel Date-Time Picker Dialog -->
+<dialog id="dlg-dt-picker" aria-labelledby="dtp-title">
+  <div class="dtp-dialog">
+    <h2 id="dtp-title" class="dtp-title">Tarih ve saati ayarla</h2>
+    <div class="dtp-wheels">
+      <div class="dtp-row dtp-date-row" role="group" aria-label="Tarih">
+        <div class="dtp-wheel-wrap">
+          <div id="dtp-wheel-month" class="dtp-wheel" role="listbox" aria-label="Ay"></div>
+        </div>
+        <div class="dtp-wheel-wrap">
+          <div id="dtp-wheel-day" class="dtp-wheel" role="listbox" aria-label="Gün"></div>
+        </div>
+        <div class="dtp-wheel-wrap">
+          <div id="dtp-wheel-year" class="dtp-wheel" role="listbox" aria-label="Yıl"></div>
+        </div>
+      </div>
+      <div class="dtp-row dtp-time-row" role="group" aria-label="Saat">
+        <div class="dtp-wheel-wrap">
+          <div id="dtp-wheel-hour" class="dtp-wheel" role="listbox" aria-label="Saat"></div>
+        </div>
+        <span class="dtp-colon" aria-hidden="true">:</span>
+        <div class="dtp-wheel-wrap">
+          <div id="dtp-wheel-min" class="dtp-wheel" role="listbox" aria-label="Dakika"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dtp-actions">
+      <button class="dtp-act-btn" type="button" id="dtp-clear">Temizle</button>
+      <div class="dtp-actions-right">
+        <button class="dtp-act-btn" type="button" id="dtp-cancel">Vazgeç</button>
+        <button class="dtp-act-btn" type="button" id="dtp-ok">Ayarla</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

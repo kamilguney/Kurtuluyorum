@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Kurtuluyorum</string>
+    <string name="water_channel">Su hatırlatmaları</string>
+    <string name="water_title">Su molası</string>
+    <string name="water_message">Bir bardak su içmek için kısa bir mola ver.</string>
+    <color name="cream">#FAF8F2</color>
+    <color name="icon_background">#FAF8F2</color>
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/cream</item>
+        <item name="android:colorAccent">#38694E</item>
+        <item name="android:statusBarColor">@color/cream</item>
+        <item name="android:navigationBarColor">@color/cream</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

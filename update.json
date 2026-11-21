@@ -1,8 +1,8 @@
 {
-    "versionCode":  2,
-    "versionName":  "1.1",
-    "apkUrl":  "https://raw.githubusercontent.com/kamilguney/Kurtuluyorum/apk-dist/Revita-ile-Kurtuluyorum-v1.1.apk",
-    "sha256":  "76798e43ccdfe0e8c5000a48c89a3337162a428349b2cb1138faec822b540c8c",
-    "sizeBytes":  438038,
-    "notes":  "u{2022} Uygulama adu{0131} Revita ile Kurtuluyorum olarak gu{00fc}ncellendi\nu{2022} Bau{015f}aru{0131}mlar ve sau{011f}lu{0131}k ilerleme gu{00f6}ru{00fc}nu{00fc}mu{00fc} yenilendi\nu{2022} Uygulama iu{00e7}i gu{00fc}venli gu{00fc}ncelleme kontrolu{00fc} eklendi"
+  "versionCode": 2,
+  "versionName": "1.1",
+  "apkUrl": "https://raw.githubusercontent.com/kamilguney/Kurtuluyorum/apk-dist/Revita-ile-Kurtuluyorum-v1.1.apk",
+  "sha256": "76798e43ccdfe0e8c5000a48c89a3337162a428349b2cb1138faec822b540c8c",
+  "sizeBytes": 438038,
+  "notes": "• Uygulama adı Revita ile Kurtuluyorum olarak güncellendi\n• Başarımlar ve sağlık ilerleme görünümü yenilendi\n• Uygulama içi güvenli güncelleme kontrolü eklendi"
 }

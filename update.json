@@ -1,0 +1,8 @@
+{
+    "versionCode":  3,
+    "versionName":  "1.2-e2e",
+    "apkUrl":  "https://raw.githubusercontent.com/kamilguney/Kurtuluyorum/updater-e2e-20261121/Revita-ile-Kurtuluyorum-e2e-v1.2.apk",
+    "sha256":  "da4c824215c3686735d28ae3904ffe880c23ed1f315b518a388bc403ce623196",
+    "sizeBytes":  438054,
+    "notes":  "• E2E updater test fixture (v1.2-e2e, code 3)\n• Same signing key, isolated package tr.revita.nefes.updaterqa"
+}
